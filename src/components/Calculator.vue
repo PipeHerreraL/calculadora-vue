@@ -11,19 +11,17 @@
             </div>
         </div>
         
-        <div class="history">
-            <h3>History</h3>
-            <ul>
-                <li v-for="(item, index) in history" :key="index">
-                    {{ item }}
-                </li>
-            </ul>
-        </div>
+        <History :items="history" />
     </div>
 </template>
 
 <script>
+import History from './History.vue';
+
 export default {
+    components: {
+        History
+    },
     data() {
         return {
             display: '',
@@ -47,8 +45,12 @@ export default {
         calculate() {
             try {
                 const result = eval(this.display);
-                this.history.unshift(`${this.display} = ${result}`);
-                this.display = result.toString();
+                if (typeof result === 'number' && isFinite(result)) {
+                    this.history.unshift(`${this.display} = ${result}`);
+                    this.display = result.toString();
+                } else {
+                    this.display = 'Error';
+                }
             } catch {
                 this.display = 'Error';
             }
@@ -109,31 +111,5 @@ button {
 }
 button:hover {
     background: #444;
-}
-
-.history {
-    color: white;
-    background: #2c2c2c;
-    padding: 20px;
-    border-radius: 12px;
-    width: 250px;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.history h3 {
-    margin-top: 0;
-    margin-bottom: 10px;
-}
-
-.history ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.history li {
-    padding: 5px 0;
-    border-bottom: 1px solid #444;
 }
 </style>
