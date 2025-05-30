@@ -11,7 +11,7 @@
             </div>
         </div>
         
-        <History :items="history" />
+        <History :items="history" @clear="history = []" />
     </div>
 </template>
 
