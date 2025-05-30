@@ -1,6 +1,9 @@
 <template>
     <div class="history">
-        <h3>History</h3>
+        <div class="wrapper">
+            <h3>History</h3>
+            <button class="clear-btn" @click="$emit('clear')">Clear</button>
+        </div>
         <ul>
             <li v-for="(item, index) in items" :key="index">
                 {{ item }}
@@ -22,6 +25,14 @@ export default {
 </script>
 
 <style scoped>
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
 .history {
     color: white;
     background: #2c2c2c;
@@ -30,6 +41,19 @@ export default {
     width: 250px;
     max-height: 400px;
     overflow-y: auto;
+}
+
+.clear-btn {
+    background: #ff5c5c;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.clear-btn:hover {
+    background: #e04848;
 }
 
 .history h3 {
