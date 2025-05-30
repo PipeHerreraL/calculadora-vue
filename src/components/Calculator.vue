@@ -1,22 +1,32 @@
 <template>
-    <div class="calculator">
-        <input type="text" v-model="display" disabled />
-        <div class="buttons">
-            <button v-for="btn in buttons" :key="btn" @click="press(btn)">
+    <div class="wrapper">
+        <div class="calculator">
+            <input type="text" v-model="display" disabled />
+            <div class="buttons">
+                <button v-for="btn in buttons" :key="btn" @click="press(btn)">
                 {{ btn }}
-            </button>
-            <button @click="calculate()">=</button>
-            <button @click="clear()">C</button>
+                </button>
+                <button @click="calculate()">=</button>
+                <button @click="clear()">C</button>
+            </div>
         </div>
+        
+        <History :items="history" />
     </div>
 </template>
 
 <script>
+import History from './History.vue';
+
 export default {
+    components: {
+        History
+    },
     data() {
         return {
             display: '',
-            buttons: ['7','8','9','/','4','5','6','*','1','2','3','-','0','.','+']
+            buttons: ['7','8','9','/','4','5','6','*','1','2','3','-','0','.','+'],
+            history: []
         };
     },
     mounted() {
@@ -34,7 +44,13 @@ export default {
         },
         calculate() {
             try {
-                this.display = eval(this.display);
+                const result = eval(this.display);
+                if (typeof result === 'number' && isFinite(result)) {
+                    this.history.unshift(`${this.display} = ${result}`);
+                    this.display = result.toString();
+                } else {
+                    this.display = 'Error';
+                }
             } catch {
                 this.display = 'Error';
             }
@@ -56,6 +72,14 @@ export default {
 </script>
 
 <style scoped>
+.wrapper {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 50px;
+}
+
 .calculator {
     background: #1e1e1e;
     padding: 20px;
