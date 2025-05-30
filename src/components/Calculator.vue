@@ -1,12 +1,23 @@
 <template>
-    <div class="calculator">
-        <input type="text" v-model="display" disabled />
-        <div class="buttons">
-            <button v-for="btn in buttons" :key="btn" @click="press(btn)">
+    <div class="wrapper">
+        <div class="calculator">
+            <input type="text" v-model="display" disabled />
+            <div class="buttons">
+                <button v-for="btn in buttons" :key="btn" @click="press(btn)">
                 {{ btn }}
-            </button>
-            <button @click="calculate()">=</button>
-            <button @click="clear()">C</button>
+                </button>
+                <button @click="calculate()">=</button>
+                <button @click="clear()">C</button>
+            </div>
+        </div>
+        
+        <div class="history">
+            <h3>History</h3>
+            <ul>
+                <li v-for="(item, index) in history" :key="index">
+                    {{ item }}
+                </li>
+            </ul>
         </div>
     </div>
 </template>
@@ -16,7 +27,8 @@ export default {
     data() {
         return {
             display: '',
-            buttons: ['7','8','9','/','4','5','6','*','1','2','3','-','0','.','+']
+            buttons: ['7','8','9','/','4','5','6','*','1','2','3','-','0','.','+'],
+            history: []
         };
     },
     mounted() {
@@ -34,7 +46,9 @@ export default {
         },
         calculate() {
             try {
-                this.display = eval(this.display);
+                const result = eval(this.display);
+                this.history.unshift(`${this.display} = ${result}`);
+                this.display = result.toString();
             } catch {
                 this.display = 'Error';
             }
@@ -56,6 +70,14 @@ export default {
 </script>
 
 <style scoped>
+.wrapper {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 50px;
+}
+
 .calculator {
     background: #1e1e1e;
     padding: 20px;
@@ -87,5 +109,31 @@ button {
 }
 button:hover {
     background: #444;
+}
+
+.history {
+    color: white;
+    background: #2c2c2c;
+    padding: 20px;
+    border-radius: 12px;
+    width: 250px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.history h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.history ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.history li {
+    padding: 5px 0;
+    border-bottom: 1px solid #444;
 }
 </style>
