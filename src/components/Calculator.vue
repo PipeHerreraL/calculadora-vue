@@ -15,23 +15,41 @@
 export default {
     data() {
         return {
-        display: '',
-        buttons: ['7','8','9','/','4','5','6','*','1','2','3','-','0','.','+']
+            display: '',
+            buttons: ['7','8','9','/','4','5','6','*','1','2','3','-','0','.','+']
         };
+    },
+    mounted() {
+        window.addEventListener('keydown', this.handleKey);
+    },
+    beforeUnmount() {
+        window.removeEventListener('keydown', this.handleKey);
     },
     methods: {
         press(value) {
-        this.display += value;
+            this.display += value;
         },
         clear() {
-        this.display = '';
+            this.display = '';
         },
         calculate() {
-        try {
-            this.display = eval(this.display);
-        } catch {
-            this.display = 'Error';
-        }
+            try {
+                this.display = eval(this.display);
+            } catch {
+                this.display = 'Error';
+            }
+        },
+        handleKey(event) {
+            const key = event.key;
+            if (this.buttons.includes(key)) {
+                this.press(key);
+            } else if (key === 'Enter') {
+                this.calculate();
+            } else if (key === 'Backspace') {
+                this.display = this.display.slice(0, -1);
+            } else if (key === 'Escape') {
+                this.clear();
+            }
         }
     }
 };
@@ -53,6 +71,7 @@ input {
     padding: 10px;
     text-align: right;
     border-radius: 6px;
+    color: #333;
 }
 .buttons {
     display: grid;
